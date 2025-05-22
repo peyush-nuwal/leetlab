@@ -109,7 +109,7 @@ export const login = async (req, res) => {
         })
 
 
-        res.status(201).json({
+        res.status(200).json({
             message: "User loggedin successfully",
             user: {
                 id: currentUser.id,
@@ -127,7 +127,21 @@ export const login = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
+    try {
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            sameStie: "strict",
+            secure: process.env.NODE_ENV !== "development"
+        })
 
+        res.status(200).json({
+            success: true,
+            message: "User logged out successfully"
+        })
+
+    } catch (error) {
+        console.log(`Error in logging out the user: ${error}`)
+    }
 }
 
 export const check = async (req, res) => {
