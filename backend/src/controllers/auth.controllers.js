@@ -65,6 +65,64 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req, res) => {
+    // take email and pwd
+    // compare 
+
+    const {email, password} = req.body;
+
+    if (!email || !password) {
+        return res.status(401).json({
+            message: "Enter all credentials"
+        })
+    }
+
+    try {
+        // now I need to find a user with email 
+        const currentUser = await db.user.findUnique({
+            where: {
+                email
+            }
+        })
+
+        if (!currentUser) {
+            return res.status(401).json({
+                message: "User not found"
+            })
+        }
+
+        const isMatch = await bcrypt.compare(password, currentUser.password)
+
+        if (!isMatch) {
+            return res.status(401).json({
+                error: "Invalied credentials"
+            })
+        }
+        
+        // set session 
+        const token = jwt.sign({ id: currentUser.id }, process.env.JWT_SECRET, {expiresIn: "7d"})
+
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            sameStie: "strict",
+            secure: process.env.NODE_ENV !== "development",
+            maxAge: 1000*60*60*24*7
+        })
+
+
+        res.status(201).json({
+            message: "User loggedin successfully",
+            user: {
+                id: currentUser.id,
+                email: currentUser.email,
+                name: currentUser.name,
+                role: currentUser.role,
+                image: currentUser.image
+            }
+        })
+
+    } catch (error) {
+        console.log(`error in logging user: ${error}`)
+    }
 
 }
 
