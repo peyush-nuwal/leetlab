@@ -36,16 +36,11 @@ export const authMiddleware = async (req, res, next) => {
 
         // now i am having a user 
         req.user = user;
+        
         next();
 
-
-        res.status(200).json({
-            success: true,
-            messaege: "User authenticated"
-        })
-
     } catch (error) {
-        res.status(401).json({
+        return res.status(401).json({
             message: "Error in authentication"
         })
     }
@@ -54,6 +49,7 @@ export const authMiddleware = async (req, res, next) => {
 export const checkAdmin = async (req, res, next) => {
     try {
         const userId = req.user.id;
+        console.log("UserId: ", userId)
 
         const user = await db.user.findUnique({
             where: {
@@ -63,6 +59,8 @@ export const checkAdmin = async (req, res, next) => {
                 role: true
             }
         }) 
+        
+        next();
 
         if (!user || user.role !== "ADMIN") {
             return res.status(403).json({
@@ -70,11 +68,10 @@ export const checkAdmin = async (req, res, next) => {
             })
         }
 
-        next();
 
     } catch (error) {
         console.error("Error in checking admin role: ", error);
-        res.status(400).json({
+        return res.status(400).json({
             message: "Error in checking admin role"
         })
     }
