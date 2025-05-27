@@ -2,85 +2,69 @@ import {db} from "../libs/db.js"
 import { getJudge0LanguageId, pollBatchResults, submitBatch } from "../libs/judge0.lib.js";
 
 export const createProblem = async (req, res) => {
-  const {
-    title,
-    description,
-    difficulty,
-    tags,
-    examples,
-    constraints,
-    testcases,
-    codeSnippets,
-    referenceSolutions,
-  } = req.body;
+    console.log("Request: ", req);
 
-  // going to check the user role once again
+    const {title, description, difficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolutions} = req.body;
 
-  try {
-    for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
-      const languageId = getJudge0LanguageId(language);
+    
+    
+    if (req.user.role !== "ADMIN") {
+        return res.status(403).json({error: "You are not allowed to create a problem"})
+    }
+    
+    try {
+        for(const [language, solutionCode] of Object.entries(referenceSolutions)) {
+            const languageId = getJudge0LanguageId(language);
+            console.log("Reached here");
+            console.log("LanguageId: ", languageId);  
+            
+            if (!languageId) {
+                return res.status(400).json({error: `Language ${language} is not supported`})
+            }
+            
+            const submissions = testcases.map(({input, output})=>({
+                source_code: solutionCode,
+                language_id: languageId,
+                stdin: input, 
+                expected_output: output
+            }))
+            
+            const submisssionResults = await submitBatch(submissions);
+            
+            const tokens = submisssionResults.map((res)=>res.token);
+            
+            const results = await pollBatchResults(tokens);
+            console.log("From controllers: ", results);
+            
+            for (let i=0; i<results.length; i++) {
+                const result = results[i];
+                
+                if (result.status.id !== 3) {
+                    return res.status(400).json({error :`Testcase ${i+1} failed for language ${language}`})
+                }
+                
+                // save problem in database
+                const newProblem = await db.problem.create({
+                    data: {
+                        title, description, difficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolutions, userId: req.user.id
+                    }
+                })
+                
+                console.log("Problem: ", newProblem)
 
-      if (!languageId) {
-        return res
-          .status(400)
-          .json({ error: `Language ${language} is not supported` });
-      }
-
-      //
-      const submissions = testcases.map(({ input, output }) => ({
-        source_code: solutionCode,
-        language_id: languageId,
-        stdin: input,
-        expected_output: output,
-      }));
-
-      const submissionResults = await submitBatch(submissions);
-
-      const tokens = submissionResults.map((res) => res.token);
-
-      const results = await pollBatchResults(tokens);
-
-      for (let i = 0; i < results.length; i++) {
-        const result = results[i];
-        console.log("Result-----", result);
-        // console.log(
-        //   `Testcase ${i + 1} and Language ${language} ----- result ${JSON.stringify(result.status.description)}`
-        // );
-        if (result.status.id !== 3) {
-          return res.status(400).json({
-            error: `Testcase ${i + 1} failed for language ${language}`,
-          });
+                return res.status(201).json(newProblem);
+            }
         }
-      }
+
+    } catch (error) {
+        console.log("Error in adding a new problem", error);
+        return res.status(400).json({
+            message: "Failed to add a new problem"
+
+        })
     }
 
-    const newProblem = await db.problem.create({
-      data: {
-        title,
-        description,
-        difficulty,
-        tags,
-        examples,
-        constraints,
-        testcases,
-        codeSnippets,
-        referenceSolutions,
-        userId: req.user.id,
-      },
-    });
-
-    return res.status(201).json({
-      sucess: true,
-      message: "Message Created Successfully",
-      problem: newProblem,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      error: "Error While Creating Problem",
-    });
-  }
-};
+}
 
 export const getAllProblems = async (req, res) => {
 
