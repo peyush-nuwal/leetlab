@@ -50,7 +50,7 @@ export const createProblem = async (req, res) => {
                     }
                 })
                 
-                console.log("Problem: ", newProblem)
+                // console.log("Problem: ", newProblem)
 
                 return res.status(201).json(newProblem);
             }
@@ -58,9 +58,10 @@ export const createProblem = async (req, res) => {
 
     } catch (error) {
         console.log("Error in adding a new problem", error);
-        return res.status(400).json({
-            message: "Failed to add a new problem"
 
+        return res.status(400).json({
+            success: false,
+            message: "Failed to add a new problem"
         })
     }
 
