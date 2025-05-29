@@ -140,7 +140,6 @@ export const updateProblem = async (req, res) => {
         })
     }
 
-    // now it means the problem exsists
     try {
         for(const [language, solutionCode] of Object.entries(referenceSolutions)) {
             const languageId = getJudge0LanguageId(language);
