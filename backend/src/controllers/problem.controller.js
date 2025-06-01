@@ -19,7 +19,7 @@ export const createProblem = async (req, res) => {
                 return res.status(400).json({error: `Language ${language} is not supported`})
             }
             
-            const submissions = testcases.map(({input, output})=>({
+            const submissions = testcases.map(({input, output})=>({ 
                 source_code: solutionCode,
                 language_id: languageId,
                 stdin: input, 
@@ -227,6 +227,6 @@ export const deleteProblem = async (req, res) => {
 }
 
 export const getAllProblemsSolvedByUser = async (req, res) => {
-
+    
 }
 
