@@ -12,7 +12,7 @@ export const getAllSubmission = async(req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Submissions fetched successfully",
+            message: "Submissions fetched successfully!",
             submission
         })
     } catch (error) {
