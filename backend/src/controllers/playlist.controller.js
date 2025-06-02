@@ -1,7 +1,32 @@
 import {db} from "../libs/db.js"
 
 export const getAllListDetails = async(req, res) => {
-    
+    try {
+        const playlists = await db.playlist.findMany({
+            where: {
+                userId: req.user.id
+            },
+            include: {
+                problems: {
+                    include: {
+                        problem: true
+                    }
+                }
+            }
+        })
+
+        res.status(200).json({
+            success: true,
+            message: "Playlist fetched successfully",
+            playlists
+        })
+
+    } catch (error) {
+        console.log("Error in creating playlist: ", error);
+        res.status(400).json({
+            error: "Failed to fetch playlists"
+        })
+    }
 }
 
 export const getPlaylistDetails = async(req, res) => {}
