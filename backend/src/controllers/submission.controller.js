@@ -57,7 +57,7 @@ export const getAllSubmissionsForProblem = async(req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Submissions fetched successfully",
+            message: "Submissions fetched successfully!",
             submissions
         
         })
