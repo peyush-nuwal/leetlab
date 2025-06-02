@@ -17,19 +17,55 @@ export const getAllListDetails = async(req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Playlist fetched successfully",
+            message: "Playlists fetched successfully",
             playlists
         })
 
     } catch (error) {
-        console.log("Error in creating playlist: ", error);
+        console.log("Error in fetching playlist: ", error);
         res.status(400).json({
             error: "Failed to fetch playlists"
         })
     }
 }
 
-export const getPlaylistDetails = async(req, res) => {}
+export const getPlaylistDetails = async(req, res) => {
+    const { playlistId } = req.params;
+
+    try {
+        const playlist = await db.playlist.findUnique({
+            where: {
+                id: playlistId,
+                userId: req.user.id
+            },
+            include: {
+                problems: {
+                    include: {
+                        problem: true
+                    }
+                }
+            }
+        })
+
+        if (!playlist) {
+            return res.status(404).json({
+                error: "Playlist not found"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Playlist fetched successfully",
+            playlist
+        })
+
+    } catch (error) {
+        console.log("Error in fetching playlist: ", error);
+        res.status(400).json({
+            error: "Failed to fetch playlist"
+        })
+    }
+}
 
 export const createPlaylist = async(req, res) => {
     try {
