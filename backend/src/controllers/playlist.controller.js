@@ -153,5 +153,32 @@ export const deletePlayList = async (req, res) => {
   }
 }
 
-export const removeProblemFromPlaylist = async(req, res) => {}
+export const removeProblemFromPlaylist = async (req, res) => {
+  const { playlistId } = req.params;
+  const { problemIds } = req.body;
 
+  try {
+    if (!Array.isArray(problemIds) || problemIds.length === 0) {
+      return res.status(400).json({ error: "Invalid or missing problemIds" });
+    }
+    // Only delete given problemIds not all
+
+    const deletedProblem = await db.problemInPlaylist.deleteMany({
+      where: {
+        playlistId,
+        problemId: {
+          in: problemIds,
+        },
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Problem removed from playlist successfully",
+      deletedProblem,
+    });
+  } catch (error) {
+    console.error("Error removing problem from playlist:", error.message);
+    res.status(500).json({ error: "Failed to remove problem from playlist" });
+  }
+}
