@@ -7,11 +7,18 @@ import problemRoutes from "./routes/problem.routes.js";
 import executionRoute from "./routes/executCode.routes.js";
 import submissionRoutes from "./controllers/submission.routes.js";
 import playlistRoutes from "./routes/playlist.routes.js";
+import cors from "cors"
 
 dotenv.config()
 const app = express()
 const port = process.env.PORT || 3000
 
+app.use(
+    cors({
+      origin: "http://localhost:5173",
+      credentials: true,
+    })
+  );
 
 app.use(express.json())
 app.use(cookieParser())
