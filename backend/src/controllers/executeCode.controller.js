@@ -26,8 +26,10 @@ export const executeCode = async (req, res) => {
         }));
 
         // send this batch to judge0
+        console.log("I have reached here")
         const submitResponse = await submitBatch(submissions);
-
+        console.log("submitResult: ", submitResponse);
+        
         const tokens = submitResponse.map((res)=>res.token);
 
         const results = await pollBatchResults(tokens);
