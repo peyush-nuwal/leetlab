@@ -1,0 +1,14 @@
+# leetlab/render.yaml
+services:
+  - type: web
+    name: judge0-api
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: judge0-db
+          property: connectionString
+      - key: REDIS_PASSWORD
+        sync: false

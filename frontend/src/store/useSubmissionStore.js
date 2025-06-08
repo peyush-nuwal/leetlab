@@ -47,7 +47,7 @@ export const useSubmissionStore = create((set, get) => ({
   getSubmissionCountForProblem: async (problemId) => {
     try {
       const res = await axiosInstance.get(
-        `/submission/get-submissions-count/${problemId}`
+        `/submission/get-submission-count/${problemId}`
       );                
 
       set({ submissionCount: res.data.count });
