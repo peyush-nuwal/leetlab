@@ -5,7 +5,9 @@ export const authMiddleware = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
 
-        
+        console.log("Token: ", token);
+
+
         if (!token) {
             return res.status(401).json({
                 message: "Please login"
@@ -62,14 +64,15 @@ export const checkAdmin = async (req, res, next) => {
             }
         }) 
         
-        next();
-
+        
         if (!user || user.role !== "ADMIN") {
             return res.status(403).json({
                 message: "You cannot access this route"
             })
         }
-
+        
+        next();
+        
 
     } catch (error) {
         console.error("Error in checking admin role: ", error);
