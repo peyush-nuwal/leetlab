@@ -44,7 +44,7 @@ export const register = async (req, res) => {
 
         res.cookie("jwt", token, {
             httpOnly: true,
-            sameStie: "strict",
+            sameStie: "none",
             secure: process.env.NODE_ENV !== "development",
             maxAge: 1000*60*60*24*7
         })
