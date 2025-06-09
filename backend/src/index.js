@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000
 
 app.use(
     cors({
-      origin: ["http://localhost:5173", "https://leetlab-drab.vercel.app"],
+      origin: ["http://localhost:5173", "https://leetlab-drab.vercel.app", "http://15.164.214.193:2358/", "https://leetlab-api.onrender.com"],
       credentials: true,
     })
   );
