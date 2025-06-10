@@ -1,4 +1,4 @@
-# 🧠 LeetLab
+#  LeetLab
 
 LeetLab is a full-stack coding platform where users can practice coding problems, submit solutions, and manage problem playlists. It includes real-time code execution using Judge0 and admin functionality to manage content.
 
@@ -6,14 +6,14 @@ LeetLab is a full-stack coding platform where users can practice coding problems
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🔐 User authentication with role-based access (Admin/User)
-- 🧪 Live code execution via Judge0
-- 📚 Problem creation and browsing
-- 📝 Submission tracking and feedback
-- 🎵 Playlist creation and management
-- 🌐 Full API integration with Axios
-- 💾 Zustand-based global state management
+- User authentication with (RBAC) role-based access (Admin/User)
+- Live code execution via Judge0
+- Problem creation and browsing
+- Submission tracking and feedback
+- Playlist creation and management
+- API integration with Axios
+- Zustand-based global state management
 
 ---
