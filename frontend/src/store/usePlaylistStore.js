@@ -17,8 +17,11 @@ export const usePlaylistStore = create((set, get) => ({
       );
 
       set((state) => ({
-        playlists: [...state.playlists, response.data.playList],
+        playlists: Array.isArray(state.playlists)
+        ? [...state.playlists, response.data.playList]
+        : [response.data.playList],
       }));
+
 
       toast.success("Playlist created successfully");
       return response.data.playList;

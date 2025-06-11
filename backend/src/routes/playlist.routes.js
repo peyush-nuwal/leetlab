@@ -17,4 +17,3 @@ playlistRoutes.delete("/:playlistId", authMiddleware, deletePlayList);
 playlistRoutes.delete("/:playlistId/remove-problem", authMiddleware, removeProblemFromPlaylist);
 
 export default playlistRoutes;
-
