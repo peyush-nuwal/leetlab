@@ -55,7 +55,7 @@ const PlaylistProfile = () => {
           </button>
         </div>
 
-        {playlists.length === 0 ? (
+        {!Array.isArray(playlists) || playlists.length === 0 ? (
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body items-center text-center">
               <h3 className="text-xl font-medium">No playlists found</h3>

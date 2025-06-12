@@ -5,12 +5,13 @@ import { usePlaylistStore } from '../store/usePlaylistStore';
 const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
   const { playlists, getAllPlaylists, addProblemToPlaylist, isLoading } = usePlaylistStore();
   const [selectedPlaylist, setSelectedPlaylist] = useState('');
+  {console.log("Playlists in modal:", playlists)}
 
   useEffect(() => {
     if (isOpen) {
       getAllPlaylists();
     }
-  }, [isOpen]);
+  }, [isOpen, getAllPlaylists]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,12 +46,15 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
             >
               <option value="">Select a playlist</option>
               {Array.isArray(playlists) &&
-                playlists.map((playlist) => (
-                  <option key={playlist.id} value={playlist.id}>
-                    {playlist.name}
-                  </option>
-                ))
+                playlists
+                  .filter((playlist) => playlist?.id && playlist?.name)
+                  .map((playlist) => (
+                    <option key={playlist.id} value={playlist.id}>
+                      {playlist.name}
+                    </option>
+                  ))
               }
+
             </select>
           </div>
 
