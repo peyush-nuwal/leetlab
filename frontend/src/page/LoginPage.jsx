@@ -63,9 +63,6 @@ const LoginPage = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            
-           
-          
 
             {/* Email */}
             <div className="form-control">
