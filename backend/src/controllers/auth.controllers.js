@@ -42,11 +42,12 @@ export const googleCallback = async (req, res) => {
     });
 
     // Redirect to homepage (or token handler page)
-    res.redirect("http://localhost:5173/");
+    const redirectUrl = process.env.FRONTEND_URL;
+    res.redirect(redirectUrl);
 
   } catch (err) {
     console.error("Google login error", err);
-    res.redirect("http://localhost:5173/login?error=google_failed");
+    res.redirect(`${redirectUrl}/login?error=google_failed`);
   }
 };
 
