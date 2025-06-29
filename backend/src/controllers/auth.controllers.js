@@ -3,6 +3,55 @@ import {db} from "../libs/db.js"
 import { UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken"
 
+export const googleCallback = async (req, res) => {
+  try {
+    const googleUser = req.user;
+
+    const existingUser = await db.user.findUnique({
+      where: {
+        email: googleUser.email,
+      },
+    });
+
+    let user = existingUser;
+
+    // If user doesn't exist, create a new user
+    if (!existingUser) {
+      user = await db.user.create({
+        data: {
+          name: googleUser.name,
+          email: googleUser.email,
+          image: googleUser.avatar,
+          role: UserRole.USER, // default role
+          password: "", // since it's Google auth, no password
+        },
+      });
+    }
+
+    // Sign a JWT token
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    // Set it in cookie just like in local login
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+
+    // Redirect to homepage (or token handler page)
+    res.redirect("http://localhost:5173/");
+
+  } catch (err) {
+    console.error("Google login error", err);
+    res.redirect("http://localhost:5173/login?error=google_failed");
+  }
+};
+
+
+
 export const register = async (req, res) => {
     const {email, password, name} = req.body;
 
