@@ -7,48 +7,47 @@ export const googleCallback = async (req, res) => {
   try {
     const googleUser = req.user;
 
-    const existingUser = await db.user.findUnique({
-      where: {
-        email: googleUser.email,
-      },
+    let user = await db.user.findUnique({
+      where: { email: googleUser.email },
     });
 
-    let user = existingUser;
-
-    // If user doesn't exist, create a new user
-    if (!existingUser) {
+    if (!user) {
       user = await db.user.create({
         data: {
           name: googleUser.name,
           email: googleUser.email,
           image: googleUser.avatar,
-          role: UserRole.USER, // default role
-          password: "", // since it's Google auth, no password
+          role: UserRole.USER,
+          password: "",
         },
       });
     }
 
-    // Sign a JWT token
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    // Set it in cookie just like in local login
     res.cookie("jwt", token, {
       httpOnly: true,
       sameSite: "None",
       secure: process.env.NODE_ENV !== "development",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
-    // Redirect to homepage (or token handler page)
-    const redirectUrl = process.env.FRONTEND_URL;
-    console.log("redirect url: ", redirectUrl)
-    res.redirect(redirectUrl);
-
+    // ✅ JS-based redirect
+    res.send(`
+      <html>
+        <head>
+          <script>
+            window.location.href = "${process.env.FRONTEND_URL}";
+          </script>
+        </head>
+        <body>Redirecting...</body>
+      </html>
+    `);
   } catch (err) {
     console.error("Google login error", err);
-    res.redirect(`${redirectUrl}/login?error=google_failed`);
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=google_failed`);
   }
 };
 
