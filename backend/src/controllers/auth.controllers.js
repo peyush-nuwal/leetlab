@@ -43,6 +43,7 @@ export const googleCallback = async (req, res) => {
 
     // Redirect to homepage (or token handler page)
     const redirectUrl = process.env.FRONTEND_URL;
+    console.log("redirect url: ", redirectUrl)
     res.redirect(redirectUrl);
 
   } catch (err) {
