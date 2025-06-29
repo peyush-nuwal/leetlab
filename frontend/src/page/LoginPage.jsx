@@ -14,8 +14,6 @@ import {
 import {z} from "zod";
 import AuthImagePattern from '../components/AuthImagePattern';
 import { useAuthStore } from '../store/useAuthStore';
-import { GOOGLE_AUTH_URL } from './config';
-
 
 const LoginSchema = z.object({
   email:z.string().email("Enter a valid email"),
@@ -143,7 +141,7 @@ const LoginPage = () => {
             <div className="divider">OR</div>
 
               <a
-                href={GOOGLE_AUTH_URL}
+                href={process.env.GOOGLE_AUTH_URL}
                 className="btn w-full flex items-center gap-2 border border-base-content/20 hover:border-primary"
               >
                 <img
