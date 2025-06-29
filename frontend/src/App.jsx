@@ -12,7 +12,6 @@ import AdminRoute from "./components/AdminRoute";
 import AddProblem from "./page/AddProblem";
 import Profile from "./page/Profile";
 import ProblemPage from "./page/ProblemPage";
-import AuthCallback from "./page/AuthCallback"; // 👈 Import the callback page
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -34,9 +33,6 @@ const App = () => {
     <div className="flex flex-col items-center justify-start ">
       <Toaster />
       <Routes>
-        {/* 🆕 OAuth callback route should be outside protected layout */}
-        <Route path="/auth/callback" element={<AuthCallback />} />
-
         <Route path="/" element={<Layout />}>
           <Route
             index
