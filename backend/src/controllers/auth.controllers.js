@@ -27,6 +27,10 @@ export const googleCallback = async (req, res) => {
       expiresIn: "7d",
     });
 
+    res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
+    res.header("Access-Control-Allow-Credentials", "true");
+
+
     res.cookie("jwt", token, {
       httpOnly: true,
       sameSite: "None",
@@ -35,23 +39,14 @@ export const googleCallback = async (req, res) => {
     });
 
     // ✅ JS-based redirect
-    res.send(`
-      <html>
-        <head>
-          <script>
-            window.location.href = "${process.env.FRONTEND_URL}";
-          </script>
-        </head>
-        <body>Redirecting...</body>
-      </html>
-    `);
+    res.redirect(process.env.FRONTEND_URL);
+
+
   } catch (err) {
     console.error("Google login error", err);
     res.redirect(`${process.env.FRONTEND_URL}/login?error=google_failed`);
   }
 };
-
-
 
 export const register = async (req, res) => {
     const {email, password, name} = req.body;
