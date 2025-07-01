@@ -48,7 +48,7 @@ useEffect(() => {
       if (event.data === "success" || event.data?.type === "oauth-success") {
         try {
           // 🧠 Call /auth/sync so main window registers the cookie
-          await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/sync`, {
+          await fetch(`${import.meta.env.VITE_BACKEND_URL}api/v1/auth/sync`, {
             credentials: "include",
           });
 

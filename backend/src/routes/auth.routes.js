@@ -21,7 +21,7 @@ authRoutes.get(
   passport.authenticate("google", { session: false }),
   googleCallback
 );
-authRoutes.get("/auth/sync", syncAuth);
+authRoutes.get("/sync", syncAuth);
 
 
 export default authRoutes;
