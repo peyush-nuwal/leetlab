@@ -1,5 +1,5 @@
 import express from "express"
-import { register, login, check, logout } from "../controllers/auth.controllers.js"
+import { register, login, check, logout, syncAuth } from "../controllers/auth.controllers.js"
 import { authMiddleware } from "../middleware/auth.middleware.js"
 import passport from "passport";
 import "../auth/google.js"; // Register strategy
@@ -21,6 +21,7 @@ authRoutes.get(
   passport.authenticate("google", { session: false }),
   googleCallback
 );
+authRoutes.get("/auth/sync", syncAuth);
 
 
 export default authRoutes;

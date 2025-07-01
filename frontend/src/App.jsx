@@ -20,7 +20,6 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  // ✅ Wait for auth check to finish before routing
   if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -30,9 +29,9 @@ const App = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-start ">
+    <div className="flex flex-col items-center justify-start">
       <Toaster />
-      <Routes>
+      <Routes key={authUser ? "auth" : "guest"}>
         <Route path="/" element={<Layout />}>
           <Route
             index

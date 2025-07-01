@@ -32,21 +32,37 @@ export const googleCallback = async (req, res) => {
 
 
     res.cookie("jwt", token, {
-      httpOnly: true,
-      sameSite: "None",
-      secure: process.env.NODE_ENV !== "development",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "None",
+    maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
-    // ✅ JS-based redirect
-    res.redirect(process.env.FRONTEND_URL);
-
+    res.send(`
+        <html>
+            <script>
+            window.opener.postMessage({ type: "oauth-success" }, "${process.env.FRONTEND_URL}");
+            window.close();
+            </script>
+        </html>
+    `);
 
   } catch (err) {
     console.error("Google login error", err);
     res.redirect(`${process.env.FRONTEND_URL}/login?error=google_failed`);
   }
+  
 };
+
+// syncAuth.js (or inside controller)
+export const syncAuth = (req, res) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).json({ message: "Not logged in" });
+  }
+  return res.status(200).json({ message: "Cookie synced" });
+};
+
 
 export const register = async (req, res) => {
     const {email, password, name} = req.body;
